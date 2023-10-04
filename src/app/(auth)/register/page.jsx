@@ -1,8 +1,9 @@
 import Link from 'next/link'
 
-import { AuthLayout } from '@/components/AuthLayout'
 import { Button } from '@/components/Button'
 import { SelectField, TextField } from '@/components/Fields'
+import { Logo } from '@/components/Logo'
+import { SlimLayout } from '@/components/SlimLayout'
 
 export const metadata = {
   title: 'Sign Up',
@@ -10,65 +11,77 @@ export const metadata = {
 
 export default function Register() {
   return (
-    <AuthLayout
-      title="Sign up for an account"
-      subtitle={
-        <>
-          Already registered?{' '}
-          <Link href="/login" className="text-cyan-600">
-            Sign in
-          </Link>{' '}
-          to your account.
-        </>
-      }
-    >
-      <form>
-        <div className="grid grid-cols-2 gap-6">
-          <TextField
-            label="First name"
-            name="first_name"
-            type="text"
-            autoComplete="given-name"
-            required
-          />
-          <TextField
-            label="Last name"
-            name="last_name"
-            type="text"
-            autoComplete="family-name"
-            required
-          />
-          <TextField
-            className="col-span-full"
-            label="Email address"
-            name="email"
-            type="email"
-            autoComplete="email"
-            required
-          />
-          <TextField
-            className="col-span-full"
-            label="Password"
-            name="password"
-            type="password"
-            autoComplete="new-password"
-            required
-          />
-          <SelectField
-            className="col-span-full"
-            label="How did you hear about us?"
-            name="referral_source"
-          >
-            <option>AltaVista search</option>
-            <option>Super Bowl commercial</option>
-            <option>Our route 34 city bus ad</option>
-            <option>The “Never Use This” podcast</option>
-          </SelectField>
+    <SlimLayout>
+      <div className="flex">
+        <Link href="/" aria-label="Home">
+          <Logo className="h-10 w-auto" />
+        </Link>
+      </div>
+      <h2 className="mt-20 text-lg font-semibold text-gray-900">
+        Get started for free
+      </h2>
+      <p className="mt-2 text-sm text-gray-700">
+        Already registered?{' '}
+        <Link
+          href="/login"
+          className="font-medium text-blue-600 hover:underline"
+        >
+          Sign in
+        </Link>{' '}
+        to your account.
+      </p>
+      <form
+        action="#"
+        className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2"
+      >
+        <TextField
+          label="First name"
+          name="first_name"
+          type="text"
+          autoComplete="given-name"
+          required
+        />
+        <TextField
+          label="Last name"
+          name="last_name"
+          type="text"
+          autoComplete="family-name"
+          required
+        />
+        <TextField
+          className="col-span-full"
+          label="Email address"
+          name="email"
+          type="email"
+          autoComplete="email"
+          required
+        />
+        <TextField
+          className="col-span-full"
+          label="Password"
+          name="password"
+          type="password"
+          autoComplete="new-password"
+          required
+        />
+        <SelectField
+          className="col-span-full"
+          label="How did you hear about us?"
+          name="referral_source"
+        >
+          <option>AltaVista search</option>
+          <option>Super Bowl commercial</option>
+          <option>Our route 34 city bus ad</option>
+          <option>The “Never Use This” podcast</option>
+        </SelectField>
+        <div className="col-span-full">
+          <Button type="submit" variant="solid" color="blue" className="w-full">
+            <span>
+              Sign up <span aria-hidden="true">&rarr;</span>
+            </span>
+          </Button>
         </div>
-        <Button type="submit" color="cyan" className="mt-8 w-full">
-          Get started today
-        </Button>
       </form>
-    </AuthLayout>
+    </SlimLayout>
   )
 }

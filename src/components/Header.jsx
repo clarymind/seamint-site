@@ -1,136 +1,126 @@
 'use client'
 
+import { Fragment } from 'react'
 import Link from 'next/link'
-import { Popover } from '@headlessui/react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { Popover, Transition } from '@headlessui/react'
+import clsx from 'clsx'
 
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { Logo } from '@/components/Logo'
-import { NavLinks } from '@/components/NavLinks'
+import { NavLink } from '@/components/NavLink'
 
-function MenuIcon(props) {
+function MobileNavLink({ href, children }) {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+    <Popover.Button as={Link} href={href} className="block w-full p-2">
+      {children}
+    </Popover.Button>
+  )
+}
+
+function MobileNavIcon({ open }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="h-3.5 w-3.5 overflow-visible stroke-slate-700"
+      fill="none"
+      strokeWidth={2}
+      strokeLinecap="round"
+    >
       <path
-        d="M5 6h14M5 18h14M5 12h14"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
+        d="M0 1H14M0 7H14M0 13H14"
+        className={clsx(
+          'origin-center transition',
+          open && 'scale-90 opacity-0',
+        )}
+      />
+      <path
+        d="M2 2L12 12M12 2L2 12"
+        className={clsx(
+          'origin-center transition',
+          !open && 'scale-90 opacity-0',
+        )}
       />
     </svg>
   )
 }
 
-function ChevronUpIcon(props) {
+function MobileNavigation() {
   return (
-    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
-      <path
-        d="M17 14l-5-5-5 5"
-        strokeWidth={2}
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function MobileNavLink(props) {
-  return (
-    <Popover.Button
-      as={Link}
-      className="block text-base leading-7 tracking-tight text-gray-700"
-      {...props}
-    />
+    <Popover>
+      <Popover.Button
+        className="relative z-10 flex h-8 w-8 items-center justify-center ui-not-focus-visible:outline-none"
+        aria-label="Toggle Navigation"
+      >
+        {({ open }) => <MobileNavIcon open={open} />}
+      </Popover.Button>
+      <Transition.Root>
+        <Transition.Child
+          as={Fragment}
+          enter="duration-150 ease-out"
+          enterFrom="opacity-0"
+          enterTo="opacity-100"
+          leave="duration-150 ease-in"
+          leaveFrom="opacity-100"
+          leaveTo="opacity-0"
+        >
+          <Popover.Overlay className="fixed inset-0 bg-slate-300/50" />
+        </Transition.Child>
+        <Transition.Child
+          as={Fragment}
+          enter="duration-150 ease-out"
+          enterFrom="opacity-0 scale-95"
+          enterTo="opacity-100 scale-100"
+          leave="duration-100 ease-in"
+          leaveFrom="opacity-100 scale-100"
+          leaveTo="opacity-0 scale-95"
+        >
+          <Popover.Panel
+            as="div"
+            className="absolute inset-x-0 top-full mt-4 flex origin-top flex-col rounded-2xl bg-white p-4 text-lg tracking-tight text-slate-900 shadow-xl ring-1 ring-slate-900/5"
+          >
+            <MobileNavLink href="#features">Features</MobileNavLink>
+            <MobileNavLink href="#testimonials">Testimonials</MobileNavLink>
+            <MobileNavLink href="#pricing">Pricing</MobileNavLink>
+            <hr className="m-2 border-slate-300/40" />
+            <MobileNavLink href="/login">Sign in</MobileNavLink>
+          </Popover.Panel>
+        </Transition.Child>
+      </Transition.Root>
+    </Popover>
   )
 }
 
 export function Header() {
   return (
-    <header>
-      <nav>
-        <Container className="relative z-50 flex justify-between py-8">
-          <div className="relative z-10 flex items-center gap-16">
-            <Link href="/" aria-label="Home">
+    <header className="py-10">
+      <Container>
+        <nav className="relative z-50 flex justify-between">
+          <div className="flex items-center md:gap-x-12">
+            <Link href="#" aria-label="Home">
               <Logo className="h-10 w-auto" />
             </Link>
-            <div className="hidden lg:flex lg:gap-10">
-              <NavLinks />
+            <div className="hidden md:flex md:gap-x-6">
+              <NavLink href="#features">Features</NavLink>
+              <NavLink href="#testimonials">Testimonials</NavLink>
+              <NavLink href="#pricing">Pricing</NavLink>
             </div>
           </div>
-          <div className="flex items-center gap-6">
-            <Popover className="lg:hidden">
-              {({ open }) => (
-                <>
-                  <Popover.Button
-                    className="relative z-10 -m-2 inline-flex items-center rounded-lg stroke-gray-900 p-2 hover:bg-gray-200/50 hover:stroke-gray-600 active:stroke-gray-900 ui-not-focus-visible:outline-none"
-                    aria-label="Toggle site navigation"
-                  >
-                    {({ open }) =>
-                      open ? (
-                        <ChevronUpIcon className="h-6 w-6" />
-                      ) : (
-                        <MenuIcon className="h-6 w-6" />
-                      )
-                    }
-                  </Popover.Button>
-                  <AnimatePresence initial={false}>
-                    {open && (
-                      <>
-                        <Popover.Overlay
-                          static
-                          as={motion.div}
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{ opacity: 0 }}
-                          className="fixed inset-0 z-0 bg-gray-300/60 backdrop-blur"
-                        />
-                        <Popover.Panel
-                          static
-                          as={motion.div}
-                          initial={{ opacity: 0, y: -32 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{
-                            opacity: 0,
-                            y: -32,
-                            transition: { duration: 0.2 },
-                          }}
-                          className="absolute inset-x-0 top-0 z-0 origin-top rounded-b-2xl bg-gray-50 px-6 pb-6 pt-32 shadow-2xl shadow-gray-900/20"
-                        >
-                          <div className="space-y-4">
-                            <MobileNavLink href="/#features">
-                              Features
-                            </MobileNavLink>
-                            <MobileNavLink href="/#reviews">
-                              Reviews
-                            </MobileNavLink>
-                            <MobileNavLink href="/#pricing">
-                              Pricing
-                            </MobileNavLink>
-                            <MobileNavLink href="/#faqs">FAQs</MobileNavLink>
-                          </div>
-                          <div className="mt-8 flex flex-col gap-4">
-                            <Button href="/login" variant="outline">
-                              Log in
-                            </Button>
-                            <Button href="#">Download the app</Button>
-                          </div>
-                        </Popover.Panel>
-                      </>
-                    )}
-                  </AnimatePresence>
-                </>
-              )}
-            </Popover>
-            <Button href="/login" variant="outline" className="hidden lg:block">
-              Log in
+          <div className="flex items-center gap-x-5 md:gap-x-8">
+            <div className="hidden md:block">
+              <NavLink href="/login">Sign in</NavLink>
+            </div>
+            <Button href="/register" color="blue">
+              <span>
+                Get started <span className="hidden lg:inline">today</span>
+              </span>
             </Button>
-            <Button href="#" className="hidden lg:block">
-              Download
-            </Button>
+            <div className="-mr-1 md:hidden">
+              <MobileNavigation />
+            </div>
           </div>
-        </Container>
-      </nav>
+        </nav>
+      </Container>
     </header>
   )
 }
